@@ -14,7 +14,7 @@ void Plotter::Plot(Int_t n, std::vector<Double_t> t, std::vector<Double_t> x){
   g1->SetLineColor(1);
   g1->SetLineWidth(1);
   g1->SetMarkerColor(1);
-  g1->SetMarkerStyle(0);
+  g1->SetMarkerStyle(1);
   g1->SetTitle("Brownian Movement D=1");
   g1->GetYaxis()->SetTitle("X");
   g1->GetXaxis()->SetTitle("Time");
@@ -31,5 +31,28 @@ void Plotter::Plot(Int_t n, std::vector<Double_t> t, std::vector<Double_t> x){
   BM1DTree->Write();
   fOut->Close();
   
+}
+
+void Plotter::MultiPlot(Int_t n, Int_t nRun, std::vector<Double_t> t, std::vector<Double_t> x){
+
+  canv = new TCanvas("canc","display",800,400);
+  mg = new TMultiGraph();
+
+for(Int_t j = 0; j < nRun; j++){
+
+  g1 = new TGraph(n,&t[j*n],&x[j*n]);
+	g1->Draw();
+  g1->SetLineColor(j+1);
+  g1->SetLineWidth(1);
+  g1->SetMarkerColor(1);
+  g1->SetMarkerStyle(0);
+  mg->Add(g1);
+
+}
+
+
+	mg->Draw();
+  
+	
 }
 
