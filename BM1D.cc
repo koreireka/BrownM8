@@ -74,11 +74,10 @@ int main(int argc, char* argv[])
   myPlotter->Plot(nRuns, nSteps, myBM1DProcess->GetT(), myBM1DProcess->GetX()); 
   
   Analyse *myAnalyse = new Analyse();
-  
-  switch(random_type){
-  	case 'g' :
+   
+  if(random_type == 'g' && nRuns == 1)	
   	  myAnalyse->AnalyseGaus(myBM1DProcess->GetT(),myBM1DProcess->GetX());
-  }
+
 
   App.Run();
   return 0;
