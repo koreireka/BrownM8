@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
 {
   TApplication App("tapp", &argc, argv);
   Int_t n = 1000;
-  Int_t nsample = 20;
+  Int_t nsample = 50;
   BM1DProcess *myBM1DProcess = new BM1DProcess(n);
 
 	myBM1DProcess->SetP0(0.2);
