@@ -42,7 +42,10 @@ void Analyse::AnalyseGaus(std::vector<Double_t> t, std::vector<Double_t> x){
 	}
 	
 	//std::cout << "t.size " << t.size() << std::endl;
+	
 	_p0 /= (Double_t)t.size();
+	
+	//std::cout << "p0 = " << _p0 << std::endl;
 	
 	
 	std::vector<Double_t> deltax;

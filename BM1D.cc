@@ -2,28 +2,29 @@
 #include "BM1DProcess.hh"
 #include "Plotter.hh"
 #include "TApplication.h"
-#include "BM1DAnalyse.hh"
+#include "Analyse.hh"
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-    Int_t nSteps, nRuns, p0,p1,x1,x2;
+    Int_t nSteps, nRuns;
+	Double_t p0,p1,x1,x2;
     Double_t mu1, mu2, sigma1, sigma2;
     string fileName="input.root";
     char random_type='u';
     Int_t vis, typeOfRun;
 
-    nSteps=nRuns=p0=p1=x1=x2=vis=typeOfRun=0;
-    mu1=mu2=sigma1=sigma2=0.0;
+    nSteps=nRuns=vis=typeOfRun=0;
+    mu1=mu2=sigma1=sigma2=p0=p1=x1=x2=0.0;
     if(argc==15)
     {
         nSteps=atoi(argv[1]);
         nRuns=atoi(argv[2]);
-        p0=atoi(argv[3]);
-        p1=atoi(argv[4]);
-        x1=atoi(argv[5]);
-        x2=atoi(argv[6]);
+        p0=atof(argv[3]);
+        p1=atof(argv[4]);
+        x1=atof(argv[5]);
+        x2=atof(argv[6]);
         mu1=atof(argv[7]);
         mu2=atof(argv[8]);
         sigma1=atof(argv[9]);
@@ -43,10 +44,10 @@ int main(int argc, char* argv[])
 		p1 = 0;
 		x1 = 0;
 		x2 = 0;
-		mu1 = 2;
-		mu2 = 2;
-		sigma1 = 3;
-		sigma2 = 1;
+		mu1 = 1;
+		mu2 = 0;
+		sigma1 = 2;
+		sigma2 = 0;
 		vis = 1;
 		typeOfRun = 1;
     }
@@ -71,10 +72,13 @@ int main(int argc, char* argv[])
 
   Plotter* myPlotter = new Plotter(vis==1);
   myPlotter->Plot(nRuns, nSteps, myBM1DProcess->GetT(), myBM1DProcess->GetX()); 
-
-	Analyse *myAnalyse;
-	
-	myAnalyse->AnalyseGaus(myBM1DProcess->GetT(),myBM1DProcess->GetX());
+  
+  Analyse *myAnalyse = new Analyse();
+  
+  switch(random_type){
+  	case 'g' :
+  	  myAnalyse->AnalyseGaus(myBM1DProcess->GetT(),myBM1DProcess->GetX());
+  }
 
   App.Run();
   return 0;
