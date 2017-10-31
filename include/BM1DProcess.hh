@@ -10,34 +10,22 @@
 
 class BM1DProcess {
 public:
-  BM1DProcess(Int_t n); //n is the number of steps
+  BM1DProcess(); 
   ~BM1DProcess();
   
-  void SetP0(Double_t p0_new){p0 = p0_new;}
-  void SetP1(Double_t p1_new){p1 = p1_new;}
-
-  void Init();
-  void Run();
-
-  void Run(Int_t nRun);
+  void Run(int nSteps, int nRuns, double p0, double p1);
+  void Run(int nSteps, int nRuns, double p0, double mu, double sigma);
+  void Run(int nSteps, int nRuns, double p0, double x1, double x2, double mu1, double sigma1, double mu2,  double sigma2);
   
   std::vector<Double_t> GetT(){return t;}
   std::vector<Double_t> GetX(){return x;}
 
-	void SetMean(Double_t m){_mean = m;}
-	void SetSigma(Double_t s){_sigma = s;}
-
  private:
-  Int_t nSteps;
-  Int_t nRun;
-  Double_t p0,p1,p2,p3,p4;
   TRandom* randomGenerator;
+  TRandom* randomGeneratorGauss;
   Double_t rand1;
   std::vector<Double_t> t;
   std::vector<Double_t> x;
-
-	Double_t _mean, _sigma;
-	Double_t _x1, _x2;
 };
   
 #endif  

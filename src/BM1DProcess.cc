@@ -1,83 +1,113 @@
 #include "BM1DProcess.hh"
 
-BM1DProcess::BM1DProcess(Int_t nP) : 
-  nSteps (nP), p0(0.5), p1(0.3), _mean(0.0), _sigma(1.0), _x1(100), _x2(300)
+BM1DProcess::BM1DProcess() 
 {
   randomGenerator = new TRandom();
+  randomGeneratorGauss = new TRandom();
 }
 
 BM1DProcess::~BM1DProcess()
 {
-  ;
+  delete randomGenerator;
+  delete randomGeneratorGauss;
 }
 
-void BM1DProcess::Init(){
-  t.push_back(0.0);  //let's start at t=0, x=0, you can change it if you vant, please use Set methods
-  x.push_back(0.0);
+
+void BM1DProcess::Run(int nRuns, int nSteps, double p0, double p1)
+{
+	for(int i = 0; i < nRuns; i++) //multiple runs
+		{
+			t.push_back(0.0);  //let's start at t=0, x=0, you can change it if you vant, please use Set methods
+			x.push_back(0.0);
+			
+			for(int ii = 1; ii < nSteps ; ii++)
+				{
+				
+					rand1 = randomGenerator->Uniform();
+						
+					if(rand1 < p0)	//step in time, but no step in x
+						{  
+							t.push_back(t.back() + 1);
+							x.push_back(x.back());
+						}
+					
+					else	//step left or right
+						{	
+							if(rand1 < p0 + p1)
+								{
+									t.push_back(t.back()+1);
+									x.push_back(x.back()+1); //one step right
+								}
+							else
+								{
+									t.push_back(t.back() + 1);
+									x.push_back(x.back() - 1); //one step left
+								}			
+						}
+				}						
+		}
 }
 
-void BM1DProcess::Run(){
-  for (Int_t i = 1;i < nSteps;i++)
-    {
-
-      rand1 = randomGenerator->Uniform();
-	if(rand1 < p0) {  //step in time, but no step in x
-	  t.push_back(t[i-1] + 1);
-	  x.push_back(x[i-1]);
-	}
-	else {
-
-		t.push_back(t[i-1]+1);
-		x.push_back(x[i-1]+ randomGenerator->Gaus(_mean, _sigma));
-
-	  }
-
-	}
-	
-    }
-
-
-void BM1DProcess::Run(Int_t nRun){
-
-Double_t g1, g2;
-Int_t index,j;
-
-for (j = 0; j < nRun; j++){
-		
-
-	x.push_back(0.0);
-	t.push_back(0.0);
-
-for (Int_t i = 1;i < nSteps;i++){
-	
-	index = j*nSteps+i; 
-
-      rand1 = randomGenerator->Uniform();
-	if(rand1 < p0) {  //step in time, but no step in x
-	  t.push_back(i + 1);
-	  x.push_back(x[index-1]);
-	
-	}
-	else {
-
-		if((x[i-1] < _x2) && (x[i-1] > _x1) ){
-		
-		_mean = 0.5;
-		_sigma = 0.2;
-		g1 = randomGenerator->Gaus(_mean, _sigma);
-	        t.push_back(i+1);
-	        x.push_back(x[index-1]+ g1); 
+void BM1DProcess::Run(int nRuns, int nSteps, double p0, double mu, double sigma)
+{
+	for(int i = 0; i < nRuns; i++) //multiple runs
+		{
+			t.push_back(0.0);  //let's start at t=0, x=0, you can change it if you vant, please use Set methods
+			x.push_back(0.0);
+			
+			for(int ii = 1; ii < nSteps ; ii++)
+				{
+					rand1 = randomGenerator->Uniform();
+						
+					if(rand1 < p0)	//step in time, but no step in x
+						{  
+							t.push_back(t.back() + 1);
+							x.push_back(x.back());
+						}
+					
+					else	//step left or right
+						{	
+							double randGauss = randomGeneratorGauss -> Gaus(mu,sigma);
+							t.push_back(t.back() + 1);
+							x.push_back(x.back() + randGauss); //one step right
+						}
+				}						
 		}
+}
 
-		else {
-		_mean = 1.0;
-		_sigma = 2.0;
-		g2 = randomGenerator->Gaus(_mean, _sigma);
-		t.push_back(i+1);
-		x.push_back(x[index-1]+ g2);
+void BM1DProcess::Run(int nRuns, int nSteps, double p0, double x1, double x2, double mu1, double sigma1, double mu2, double sigma2)
+{
+	for(int i = 0; i < nRuns; i++) //multiple runs
+		{
+			t.push_back(0.0);  //let's start at t=0, x=0, you can change it if you vant, please use Set methods
+			x.push_back(0.0);
+			
+			double randGauss;
+			
+			for(int ii = 1; ii < nSteps ; ii++)
+				{
+					rand1 = randomGenerator->Uniform();
+					
+					if(rand1 < p0)	//step in time, but no step in x
+						{  
+							t.push_back(t.back() + 1);
+							x.push_back(x.back());
+						}
+					
+					else	//step left or right
+						{	
+							if(x.back() < x2 && x.back() > x1)
+								{
+									randGauss = randomGeneratorGauss -> Gaus(mu1,sigma1);
+								}
+							else 
+								{
+									randGauss = randomGeneratorGauss -> Gaus(mu2,sigma2);
+								}	
+						
+							t.push_back(t.back() + 1);
+							x.push_back(x.back() + randGauss); //one step right
+						}
+				}						
 		}
-	  }
-
-	}
-  }
 }
