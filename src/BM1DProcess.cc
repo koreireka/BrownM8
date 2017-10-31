@@ -27,21 +27,9 @@ void BM1DProcess::Run(){
 	}
 	else {
 
-		if((x[i-1] < _x2) && (x[i-1] > _x1) ){
-		
-		_mean = 0.5;
-		_sigma = 0.2;
-
-	      t.push_back(t[i-1]+1);
-	      x.push_back(x[i-1]+ randomGenerator->Gaus(_mean, _sigma)); 
-		}
-
-		else {
-		_mean = 1.0;
-		_sigma = 2.0;
 		t.push_back(t[i-1]+1);
 		x.push_back(x[i-1]+ randomGenerator->Gaus(_mean, _sigma));
-		}
+
 	  }
 
 	}
